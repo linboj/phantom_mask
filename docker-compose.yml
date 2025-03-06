@@ -1,0 +1,75 @@
+name: phantom_mask
+services:
+  web_api:
+    container_name: web_api
+    build:
+      context: ./Backend
+      dockerfile: ./Dockerfile
+    ports:
+      - "8080:8080"
+    depends_on:
+      - mysql_db
+        # condition: service_healthy
+    restart: unless-stopped
+    environment:
+      DB: ${MYSQL_DATABASE}
+      USER: ${MYSQL_USER}
+      PW: ${MYSQL_PASSWORD}
+    networks:
+      - mask_network
+  mysql_db:
+    image: mysql:9.2.0
+    container_name: mysql_db_container
+    environment:
+      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
+      MYSQL_DATABASE: ${MYSQL_DATABASE}
+      MYSQL_USER: ${MYSQL_USER}
+      MYSQL_PASSWORD: ${MYSQL_PASSWORD}
+      MYSQL_INITDB_SKIP_TZINFO: 1
+    ports:
+      - "3306:3306"
+    volumes:
+      - ./mysql/data:/var/lib/mysql
+      - ./mysql/init:/docker-entrypoint-initdb.d
+      - ./mysql/logs:/var/log/mysql:rw｀
+    command:
+      - --character-set-server=utf8mb4 
+      - --collation-server=utf8mb4_unicode_ci
+      - --general-log=1
+      - --general-log-file=/var/log/mysql/mysql.log
+      - --log-error=/var/log/mysql/error.log
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "200m"
+        max-file: "3"
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-u$$MYSQL_USER", "-p$$MYSQL_PASSWORD"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+    restart: unless-stopped
+    security_opt:
+      - no-new-privileges:true
+    networks:
+      - mask_network
+    ulimits:
+      nproc: 65535
+      nofile:
+        soft: 20000
+        hard: 40000
+    mem_limit: 1g
+    memswap_limit: 2g
+    tmpfs:
+      - /tmp
+      - /var/run/mysqld
+
+    deploy:
+      resources:
+        limits:
+          memory: 1G
+          cpus: '1'
+
+networks:
+  mask_network:
+    driver: bridge
