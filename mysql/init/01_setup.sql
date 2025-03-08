@@ -77,5 +77,32 @@ CREATE INDEX `IX_Transactions_UserId` ON `Transactions` (`UserId`);
 INSERT INTO `__EFMigrationsHistory` (`MigrationId`, `ProductVersion`)
 VALUES ('20250306115445_initialCreate', '9.0.2');
 
+ALTER TABLE `Users` ADD `CreatedAt` datetime(6) NOT NULL DEFAULT '0001-01-01 00:00:00';
+
+ALTER TABLE `Users` ADD `UpdatedAt` datetime(6) NOT NULL DEFAULT '0001-01-01 00:00:00';
+
+ALTER TABLE `Transactions` ADD `CreatedAt` datetime(6) NOT NULL DEFAULT '0001-01-01 00:00:00';
+
+ALTER TABLE `Transactions` ADD `UpdatedAt` datetime(6) NOT NULL DEFAULT '0001-01-01 00:00:00';
+
+ALTER TABLE `Pharmacies` ADD `CreatedAt` datetime(6) NOT NULL DEFAULT '0001-01-01 00:00:00';
+
+ALTER TABLE `Pharmacies` ADD `UpdatedAt` datetime(6) NOT NULL DEFAULT '0001-01-01 00:00:00';
+
+ALTER TABLE `OpeningHours` ADD `CreatedAt` datetime(6) NOT NULL DEFAULT '0001-01-01 00:00:00';
+
+ALTER TABLE `OpeningHours` ADD `UpdatedAt` datetime(6) NOT NULL DEFAULT '0001-01-01 00:00:00';
+
+ALTER TABLE `MaskTypes` ADD `CreatedAt` datetime(6) NOT NULL DEFAULT '0001-01-01 00:00:00';
+
+ALTER TABLE `MaskTypes` ADD `UpdatedAt` datetime(6) NOT NULL DEFAULT '0001-01-01 00:00:00';
+
+ALTER TABLE `Masks` ADD `CreatedAt` datetime(6) NOT NULL DEFAULT '0001-01-01 00:00:00';
+
+ALTER TABLE `Masks` ADD `UpdatedAt` datetime(6) NOT NULL DEFAULT '0001-01-01 00:00:00';
+
+INSERT INTO `__EFMigrationsHistory` (`MigrationId`, `ProductVersion`)
+VALUES ('20250308022038_AddBaseEntity', '9.0.2');
+
 COMMIT;
 
